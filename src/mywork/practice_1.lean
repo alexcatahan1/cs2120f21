@@ -1,4 +1,11 @@
 /-
+Giraffe
+ctg8h@virginia.edu, https://github.com/ColeGinghina/cs2120f21.git
+rac4sq@virginia.edu, https://github.com/alexcatahan1/cs2120f21.git
+hl7zp@virginia.edu, https://github.com/hanyangli2/cs2120f21.git
+-/
+
+/-
 EQUALITY
 -/
 
@@ -14,8 +21,8 @@ at first appear.
 -/
 
 /-
-Answer: Since we know w = z, we can apply the symmetry of equality
-to prove w = z
+If w equals z, and equality is symmetric, using the theorem that 
+equality is symmetric we can deduce that z must equal w.
 -/
 
 /- #2
@@ -27,8 +34,10 @@ all propositions in Lean).
 -/
 
 def prop_1 : Prop := 
-  ∀ (T : Type) (x y z w : T), x = y → y = z → w = z → z = w 
-
+  ∀ (T : Type) 
+    (w z : T), 
+    w = z → 
+    z = w 
 
 /- #3 (extra credit)
 Give a formal proof of the proposition from #2 by filling in
@@ -39,9 +48,10 @@ again, called eq.refl, eq.subst, eq.symm, eq.trans.
 
 theorem prop_1_proof : prop_1 := 
 begin
-  assume T x y z w e1 e2 e3,
-  apply eq.symm e3,
-
+  assume T,
+  assume w z,
+  assume h, 
+  apply eq.symm h,
 end
 
 /-
@@ -56,14 +66,15 @@ type of X.)
 -/
 
 /-
-Answer:
-assume any abitrary x, and then show that property is true for that x
+Assume that you are given any arbitrary yet specific object of type
+T. If that object has the desired property, then
+all objects of that type will contain that property.
 -/
 
 /- #5
 Suppose you have a proof, let's call it pf, of the proposition,
 (∀ x, P x), and you need a proof of P t, for some particular t.
-Write an expression then uses the elimination rule for ∀ to get
+Write an expression that uses the elimination rule for ∀ to get
 such a proof. Complete the answer by replacing the underscores
 in the following expression: (pf t). 
 -/
@@ -91,6 +102,7 @@ Hint: put parenthesis around "n + 1" in your answer.
 def successor_of_even_is_odd : Prop := 
   ∀ (n : ℕ), ev n → odd (n + 1)
 
+
 /- #7
 Suppose that "its_raining" and "the_streets_are_wet" are
 propositions. (We formalize these assumptions as axioms in
@@ -115,7 +127,7 @@ you are asked to use the elimination rule for →.
 axiom pf_raining : raining
 
 example : streets_wet :=
- if_raining_then_streets_wet pf_raining 
+ (if_raining_then_streets_wet pf_raining)
 
 /- 
 AND: ∧
@@ -165,10 +177,7 @@ begin
   have qr : Q ∧ R := and.elim_right h,
   have q : Q := and.elim_left qr,
   have r : R := and.elim_right qr,
-  have pq: P ∧ Q := and.intro p q,
-  apply and.intro _ _,
-  exact pq,
-  exact r,
+  exact and.intro (and.intro p q) r,
 end
 
 /- #11
@@ -176,15 +185,22 @@ Give an English language proof of the preceding
 theorem. Do it by finishing off the following
 partial "proof explanation."
 
-Proof. We assume that P, Q, and R are arbitrary proposition. 
-We also assume that we have a proof (P ∧ (Q ∧ R)), called p_qr. 
-What is left to be proven is ((P ∧ Q) ∧ R). Using the introduction rule
-for and on ((P ∧ Q) ∧ R), our goal is now to prove (P ∧ Q) and prove R. 
-We can contruct a proof of these propositions by applying the 
-elimination rule for and to p_qr to get a proof of P, a proof of Q, 
-and a proof of R. Then we can apply the introduction rule for and to 
-construct a proof of (P ∧ Q). We then have a proof of (P ∧ Q) 
-and a proof of R, which in that context ((P ∧ Q) ∧ R) is proven.
+Proof. We assume that P, Q, and R are arbitrary 
+but specific propositions, and that we have a
+proof, let's call it p_qr, of (P ∧ (Q ∧ R)) [by
+application of ∧ and → introduction.] What now
+remains to be proved is ((P ∧ Q) ∧ R). First, we assume
+h to be a proof of (P ∧ (Q ∧ R)). Applying the elimination rule
+for ∧ to the left side of h, we get a proof of P (called p). We
+then apply the elimination rule to the right of h to
+get a proof of (Q ∧ R) (I will call this qr). Then, applying
+the elimination rule for ∧ twice more, to the left and right of
+qr, we get proofs for both Q and R (called q and r respectively). 
+Finally, we exact the introduction rule for ∧, filling in 
+the left argument with a second introduction rule for ∧ using 
+arguments p and q respectively. We fill in the right argument with r, 
+therefore proving all propositions true and that ∧ is
+associative.
 -/
 
 
