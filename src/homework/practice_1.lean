@@ -174,6 +174,10 @@ theorem and_associative :
 begin
   intros P Q R h,
   have p : P := and.elim_left h,
+  have qr : Q ∧ R := and.elim_right h,
+  have q : Q := and.elim_left qr,
+  have r : R := and.elim_right qr,
+  exact and.intro (and.intro p q) r,
 end
 
 /- #11
