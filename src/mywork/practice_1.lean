@@ -13,6 +13,11 @@ this question that makes it much easier to answer than it might
 at first appear.
 -/
 
+/-
+Answer: Since we know w = z, we can apply the symmetry of equality
+to prove w = z
+-/
+
 /- #2
 Give a formal statement of the conjecture (proposition) from
 #1 by filling in the "hole" in the following definition. The
@@ -22,7 +27,8 @@ all propositions in Lean).
 -/
 
 def prop_1 : Prop := 
-  _
+  ∀ (T : Type) (x y z w : T), x = y → y = z → w = z → z = w 
+
 
 /- #3 (extra credit)
 Give a formal proof of the proposition from #2 by filling in
@@ -33,7 +39,9 @@ again, called eq.refl, eq.subst, eq.symm, eq.trans.
 
 theorem prop_1_proof : prop_1 := 
 begin
-  _
+  assume T x y z w e1 e2 e3,
+  apply eq.symm e3,
+
 end
 
 /-
@@ -47,12 +55,17 @@ what do you do? (I'm being a little informal in leaving out the
 type of X.) 
 -/
 
+/-
+Answer:
+assume any abitrary x, and then show that property is true for that x
+-/
+
 /- #5
 Suppose you have a proof, let's call it pf, of the proposition,
 (∀ x, P x), and you need a proof of P t, for some particular t.
 Write an expression then uses the elimination rule for ∀ to get
 such a proof. Complete the answer by replacing the underscores
-in the following expression: ( _ _ ). 
+in the following expression: (pf t). 
 -/
 
 /-
@@ -76,7 +89,7 @@ Hint: put parenthesis around "n + 1" in your answer.
 -/
 
 def successor_of_even_is_odd : Prop := 
-  _
+  ∀ (n : ℕ), ev n → odd (n + 1)
 
 /- #7
 Suppose that "its_raining" and "the_streets_are_wet" are
@@ -88,7 +101,7 @@ by filling in the hole
 
 axioms (raining streets_wet : Prop)
 
-axiom if_raining_then_streets_wet : _
+axiom if_raining_then_streets_wet : raining → streets_wet
   
 
 /- #9
@@ -102,7 +115,7 @@ you are asked to use the elimination rule for →.
 axiom pf_raining : raining
 
 example : streets_wet :=
- _
+ if_raining_then_streets_wet pf_raining 
 
 /- 
 AND: ∧
@@ -149,6 +162,13 @@ theorem and_associative :
 begin
   intros P Q R h,
   have p : P := and.elim_left h,
+  have qr : Q ∧ R := and.elim_right h,
+  have q : Q := and.elim_left qr,
+  have r : R := and.elim_right qr,
+  have pq: P ∧ Q := and.intro p q,
+  apply and.intro _ _,
+  exact pq,
+  exact r,
 end
 
 /- #11
@@ -156,16 +176,15 @@ Give an English language proof of the preceding
 theorem. Do it by finishing off the following
 partial "proof explanation."
 
-Proof. We assume that P, Q, and R are arbitrary 
-but specific propositions, and that we have a
-proof, let's call it p_qr, of (P ∧ (Q ∧ R)) [by
-application of ∧ and → introduction.] What now
-remains to be proved is ((P ∧ Q) ∧ R). We can
-construct a proof of this proposition by applying
-_____ to a proof of (P ∧ Q) and a proof of R.
-What remains, then, is to obtain these proofs.
-But this is easily done by the application of
-____ to ____. QED. 
+Proof. We assume that P, Q, and R are arbitrary proposition. 
+We also assume that we have a proof (P ∧ (Q ∧ R)), called p_qr. 
+What is left to be proven is ((P ∧ Q) ∧ R). Using the introduction rule
+for and on ((P ∧ Q) ∧ R), our goal is now to prove (P ∧ Q) and prove R. 
+We can contruct a proof of these propositions by applying the 
+elimination rule for and to p_qr to get a proof of P, a proof of Q, 
+and a proof of R. Then we can apply the introduction rule for and to 
+construct a proof of (P ∧ Q). We then have a proof of (P ∧ Q) 
+and a proof of R, which in that context ((P ∧ Q) ∧ R) is proven.
 -/
 
 
